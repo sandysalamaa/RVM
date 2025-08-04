@@ -1,66 +1,28 @@
-#### Video Tutorial for this project
-https://youtu.be/SQ4A7Q6_md8
-<br><br>
 
-#### Getting the files
-Download zip file<br> 
-or <br>
-git clone command (need git to be installed) and remove git folder afterwards
-```
-git clone https://github.com/andyjud/django-starter.git . && rm -rf .git
-```
-<br><br><br>
+# RVM Deposit Logging & Reward Engine API
 
-## Setup
-
-#### - Create Virtual Environment
-###### # Mac
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-
-###### # Windows
-```
-python3 -m venv venv
-(Powershell:) .\venv\Scripts\Activate.ps1
-```
-```
-(or Command Prompt:) venv\Scripts\activate 
-(or Git Bash:) source venv/Scripts/activate
-```
-
-<br>
-
-#### - Install dependencies
-```
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-<br>
-
-#### - Migrate to database
-```
-python manage.py migrate
-python manage.py createsuperuser
-```
-
-<br>
-
-#### - Run application
-```
-python manage.py runserver
-```
-
-<br>
-
-#### - Generate Secret Key ( ! Important for deployment ! )
-```
-python manage.py shell
-from django.core.management.utils import get_random_secret_key
-print(get_random_secret_key())
-exit()
-```
+### Feature
+- User registration/login with JWT
+- Record deposits with material type, weight, and machine ID
+- Reward points auto-calculated via reward engine
+- Admin can update reward rules
+- Async processing with Celery
 
 
+### Setup Instructions
+2. `python manage.py migrate`
+3. Create a superuser
+4. Run: `celery -A rvm_project worker --loglevel=info`
+5. Run dev server: `python manage.py runserver`
+
+### API Endpoints
+- `POST /register/` — Register new user
+- `POST /login/` — Login and receive JWT
+- `POST /deposit/` — Submit deposit (auth required)
+- `GET /summary/` — View user stats (auth required)
+- `GET/POST /admin/reward-rules/` — Admin interface to view/update reward rules
+
+### Architectural Decisions
+- Separate reward logic in `reward_engine.py`
+- Async background job with Celery to offload scoring
+- Clean permission separation (user vs. admin)

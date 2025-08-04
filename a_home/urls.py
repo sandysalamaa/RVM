@@ -1,6 +1,8 @@
-from django.urls import path
-from a_home.views import *
+from django.urls import path  
+from .views import *
 
 urlpatterns = [
-    path('', home_view, name="home"),  
+    path("deposit/", DepositView.as_view()),
+    path("summary/", UserSummeryView.as_view()),
+    path("admin/reward-rules/", RewardRuleAdminView.as_view()),
 ]
